@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMIGURUMIS — Objetos de Arte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@100;200;300;400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    // ── EMAILJS CONFIG ─────────────────────────────
+    // TODO: Remplace ces 3 valeurs par tes clés EmailJS
+    const EMAILJS_PUBLIC_KEY  = 'L8pDelmxaHtXkXDz4';   // Account > API Keys
+    const EMAILJS_SERVICE_ID  = 'service_yknz6tj';   // Email Services > Service ID
+    const EMAILJS_TEMPLATE_ID = 'template_9b5o7wg';  // Email Templates > Template ID
+    // ───────────────────────────────────────────────
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  </script>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --noir:      #070605;
+      --noir-2:    #0f0e0c;
+      --blanc:     #f4efe6;
+      --or:        #c9a96e;
+      --or-clair:  #e8d5a8;
+      --or-sombre: #8a6d3e;
+      --gris:      #5a554f;
+      --ease-lux:  cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--noir);
+      color: var(--blanc);
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* ─── CURSOR ──────────────────────────────────────── */
+    #cur {
+      position: fixed;
+      width: 7px; height: 7px;
+      background: var(--or);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .3s, height .3s;
+    }
+    #cur-ring {
+      position: fixed;
+      width: 34px; height: 34px;
+      border: 1px solid rgba(201,169,110,.55);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+    }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 3.5rem;
+      transition: background .5s, backdrop-filter .5s;
+    }
+    nav.scrolled {
+      background: rgba(7,6,5,.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1.35rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--blanc);
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: .6rem;
+    }
+    .nav-brand-sub {
+      font-size: .62rem;
+      letter-spacing: .18em;
+      font-weight: 300;
+      font-style: italic;
+      text-transform: none;
+      color: rgba(244,239,230,.45);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.8rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,.65);
+      text-decoration: none;
+      transition: color .3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--or);
+      transition: width .4s var(--ease-lux);
+    }
+    .nav-links a:hover { color: var(--or-clair); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ─── LANGUAGE SWITCHER ───────────────────────────── */
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .lang-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: .58rem;
+      font-weight: 300;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,.3);
+      background: none;
+      border: none;
+      cursor: none;
+      padding: .2rem 0;
+      position: relative;
+      transition: color .3s;
+    }
+    .lang-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0;
+      width: 0; height: 1px;
+      background: var(--or);
+      transition: width .35s var(--ease-lux);
+    }
+    .lang-btn:hover { color: rgba(244,239,230,.6); }
+    .lang-btn.active {
+      color: var(--or);
+    }
+    .lang-btn.active::after { width: 100%; }
+    .lang-sep {
+      font-size: .5rem;
+      color: rgba(244,239,230,.15);
+      user-select: none;
+    }
+
+    /* ─── HERO ────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%; height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero video {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top,
+          rgba(7,6,5,.92) 0%,
+          rgba(7,6,5,.35) 40%,
+          rgba(7,6,5,.12) 65%,
+          rgba(7,6,5,.55) 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 3.5rem 5.5rem;
+    }
+    .hero-label {
+      display: block;
+      font-size: .62rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease-lux) .5s forwards;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4.5rem, 11vw, 10rem);
+      font-weight: 300;
+      line-height: .9;
+      letter-spacing: -.02em;
+      margin-bottom: 2.2rem;
+      opacity: 0;
+      animation: fadeUp 1.5s var(--ease-lux) .75s forwards;
+    }
+    .hero-title em { font-style: italic; color: var(--or-clair); }
+    .hero-sub {
+      font-size: clamp(.82rem, 1.1vw, .95rem);
+      font-weight: 200;
+      line-height: 1.9;
+      letter-spacing: .07em;
+      color: rgba(244,239,230,.5);
+      max-width: 36ch;
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease-lux) 1.1s forwards;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.8rem; right: 3.5rem;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .8rem;
+      opacity: 0;
+      animation: fadeIn 1s var(--ease-lux) 2s forwards;
+    }
+    .hero-scroll span {
+      font-size: .55rem;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: var(--or);
+      writing-mode: vertical-rl;
+    }
+    .scroll-bar {
+      width: 1px; height: 56px;
+      background: linear-gradient(to bottom, var(--or), transparent);
+      transform-origin: top;
+      animation: scaleBar 2s ease-in-out infinite 2.5s;
+    }
+
+    /* ─── MARQUEE ─────────────────────────────────────── */
+    .marquee-wrap {
+      overflow: hidden;
+      padding: 2.8rem 0;
+      border-top: 1px solid rgba(201,169,110,.12);
+      border-bottom: 1px solid rgba(201,169,110,.12);
+      background: var(--noir-2);
+    }
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 28s linear infinite;
+    }
+    .m-item {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(244,239,230,.07);
+      padding: 0 2rem;
+      flex-shrink: 0;
+    }
+    .m-item.accent {
+      color: var(--or);
+      opacity: .35;
+      font-style: normal;
+    }
+
+    /* ─── ABOUT ───────────────────────────────────────── */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      min-height: 100vh;
+    }
+    .about-left {
+      position: relative;
+      background: var(--noir-2);
+      overflow: hidden;
+    }
+    .about-left-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse at 35% 55%, rgba(201,169,110,.055) 0%, transparent 55%),
+        linear-gradient(145deg, #0d0c0b 0%, #161410 50%, #0d0c0b 100%);
+    }
+    .orb {
+      position: relative;
+      width: 260px; height: 260px;
+    }
+    .orb-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(201,169,110,.18);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+    }
+    .orb-ring:nth-child(1) { width: 260px; height: 260px; }
+    .orb-ring:nth-child(2) { width: 196px; height: 196px; border-color: rgba(201,169,110,.1); }
+    .orb-ring:nth-child(3) { width: 132px; height: 132px; border-color: rgba(201,169,110,.14); }
+    .orb-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: .9rem;
+      color: var(--or);
+      opacity: .55;
+      letter-spacing: .12em;
+      white-space: nowrap;
+    }
+    .about-num {
+      position: absolute;
+      top: 3rem; left: 3rem;
+      font-size: .6rem;
+      letter-spacing: .22em;
+      color: var(--or);
+      opacity: .3;
+    }
+    .about-right {
+      padding: 7rem 5.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .sec-label {
+      font-size: .62rem;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 2.5rem;
+      opacity: .75;
+    }
+    .sec-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1.08;
+      letter-spacing: -.01em;
+      margin-bottom: 2.4rem;
+    }
+    .sec-heading em { font-style: italic; color: var(--or-clair); }
+    .hairline {
+      width: 38px; height: 1px;
+      background: var(--or);
+      opacity: .5;
+      margin-bottom: 2.4rem;
+    }
+    .body-text {
+      font-size: clamp(.82rem, 1.05vw, .94rem);
+      font-weight: 200;
+      line-height: 1.95;
+      color: rgba(244,239,230,.5);
+      max-width: 44ch;
+    }
+    .body-text + .body-text { margin-top: 1.2rem; }
+    .btn {
+      display: inline-block;
+      margin-top: 3rem;
+      padding: .85rem 2.4rem;
+      border: 1px solid rgba(201,169,110,.35);
+      font-size: .62rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      text-decoration: none;
+      align-self: flex-start;
+      transition: background .4s, color .4s, border-color .4s;
+    }
+    .btn:hover { background: var(--or); color: var(--noir); border-color: var(--or); }
+
+    /* ─── GALLERY ─────────────────────────────────────── */
+    .gallery {
+      background: var(--blanc);
+      color: var(--noir);
+      padding: 8rem 3.5rem;
+    }
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4.5rem;
+    }
+    .gallery-header .sec-label { color: #7a6845; margin-bottom: .8rem; }
+    .gallery-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--noir);
+    }
+    .gallery-title em { font-style: italic; color: #8a6d3e; }
+    .gallery-count {
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: #9a8060;
+      align-self: flex-end;
+      padding-bottom: .2rem;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 2px;
+    }
+    .g-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      background: #ddd7cc;
+    }
+    .g-item:first-child { aspect-ratio: auto; min-height: 500px; }
+    .g-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 40% 30%, rgba(180,155,110,.12) 0%, transparent 55%),
+        linear-gradient(155deg, #dbd5ca 0%, #c9c1b4 55%, #d6cfc3 100%);
+    }
+    .g-item:nth-child(2)::before {
+      background:
+        radial-gradient(ellipse at 60% 70%, rgba(130,105,70,.14) 0%, transparent 55%),
+        linear-gradient(200deg, #c8c0b3 0%, #b9b1a4 55%, #cbc3b6 100%);
+    }
+    .g-item:nth-child(3)::before {
+      background:
+        radial-gradient(ellipse at 30% 45%, rgba(70,62,50,.18) 0%, transparent 55%),
+        linear-gradient(120deg, #d0c8bb 0%, #bdb6a9 55%, #c8c0b3 100%);
+    }
+    .g-item img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      z-index: 1;
+    }
+    .g-caption {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem 1.8rem;
+      background: linear-gradient(to top, rgba(7,6,5,.4) 0%, transparent 35%);
+      opacity: 0;
+      transition: opacity .45s var(--ease-lux);
+      z-index: 2;
+    }
+    .g-item:hover .g-caption { opacity: 1; }
+    .g-num { font-size: .58rem; letter-spacing: .2em; color: var(--or); margin-bottom: .3rem; }
+    .g-name { display: none; }
+
+    /* ─── CAROUSEL ───────────────────────────────────── */
+    .carousel-wrap {
+      overflow: hidden;
+      margin-top: 2px;
+      position: relative;
+    }
+    .carousel-wrap::before,
+    .carousel-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .carousel-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, var(--blanc), transparent);
+    }
+    .carousel-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, var(--blanc), transparent);
+    }
+    .carousel-track {
+      display: flex;
+      gap: 2px;
+      width: max-content;
+      will-change: transform;
+    }
+    .c-item {
+      position: relative;
+      width: 320px;
+      height: 400px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #d0c8bb;
+    }
+    .c-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform .6s var(--ease-lux);
+    }
+    .c-item:hover img { transform: scale(1.04); }
+    .c-item .g-caption {
+      opacity: 0;
+      transition: opacity .4s var(--ease-lux);
+      z-index: 2;
+    }
+    .c-item:hover .g-caption { opacity: 1; }
+
+    /* ─── MANIFESTE ───────────────────────────────────── */
+    .manifeste {
+      background: var(--noir-2);
+      padding: 11rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .manifeste::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: max(700px, 60vw); height: max(700px, 60vw);
+      border: 1px solid rgba(201,169,110,.05);
+      border-radius: 50%;
+    }
+    .manifeste::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: max(480px, 40vw); height: max(480px, 40vw);
+      border: 1px solid rgba(201,169,110,.08);
+      border-radius: 50%;
+    }
+    .manifeste blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4.2vw, 3.8rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.32;
+      max-width: 22ch;
+      margin: 0 auto 2rem;
+      position: relative;
+      z-index: 1;
+      letter-spacing: .01em;
+    }
+    .manifeste cite {
+      font-size: .62rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--or);
+      opacity: .65;
+      font-style: normal;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── CONTACT ─────────────────────────────────────── */
+    .contact {
+      padding: 8rem 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      border-top: 1px solid rgba(201,169,110,.1);
+    }
+    .contact-info { margin-top: 3rem; }
+    .c-row {
+      display: flex;
+      gap: 2rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(244,239,230,.07);
+      align-items: baseline;
+    }
+    .c-label {
+      font-size: .6rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--or);
+      min-width: 80px;
+    }
+    .c-val {
+      font-size: .88rem;
+      font-weight: 200;
+      letter-spacing: .05em;
+      color: rgba(244,239,230,.45);
+    }
+    .form-row { margin-bottom: 2rem; }
+    .form-row label {
+      display: block;
+      font-size: .6rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: .6rem;
+    }
+    .form-row input,
+    .form-row textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(244,239,230,.12);
+      padding: .75rem 0;
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      font-size: .88rem;
+      color: var(--blanc);
+      outline: none;
+      letter-spacing: .05em;
+      transition: border-color .3s;
+    }
+    .form-row input:focus,
+    .form-row textarea:focus { border-color: var(--or); }
+    .form-row textarea { resize: none; height: 96px; }
+    .form-row input::placeholder,
+    .form-row textarea::placeholder { color: rgba(244,239,230,.18); font-weight: 100; }
+    .btn-submit {
+      width: 100%;
+      padding: 1.05rem;
+      background: transparent;
+      border: 1px solid rgba(201,169,110,.3);
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      font-size: .62rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      cursor: none;
+      margin-top: .8rem;
+      transition: background .4s, color .4s, border-color .4s, opacity .3s;
+      position: relative;
+    }
+    .btn-submit:hover:not(:disabled) { background: var(--or); color: var(--noir); border-color: var(--or); }
+
+    /* Contact button */
+    .btn-contact {
+      display: inline-block;
+      margin-top: 3rem;
+      padding: 1rem 2.8rem;
+      border: 1px solid rgba(201,169,110,.35);
+      font-size: .62rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      text-decoration: none;
+      transition: background .4s, color .4s, border-color .4s;
+    }
+    .btn-contact:hover { background: var(--or); color: var(--noir); border-color: var(--or); }
+
+    /* Artist photo */
+    .artist-photo { position: relative; }
+    .artist-photo-inner {
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      background:
+        radial-gradient(ellipse at 40% 35%, rgba(201,169,110,.07) 0%, transparent 55%),
+        linear-gradient(155deg, #0f0e0c 0%, #1a1814 50%, #0f0e0c 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .artist-photo-inner::before {
+      content: '';
+      position: absolute;
+      inset: 1.5rem;
+      border: 1px dashed rgba(201,169,110,.18);
+    }
+    .artist-photo-inner::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -55%);
+      width: 72px; height: 72px;
+      background: rgba(201,169,110,.1);
+      border-radius: 50%;
+      box-shadow: 0 44px 0 20px rgba(201,169,110,.06);
+    }
+    .artist-photo-inner.has-photo::before,
+    .artist-photo-inner.has-photo::after { display: none; }
+    .artist-photo-inner img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+      object-position: center center;
+    }
+    .artist-photo-label {
+      position: relative;
+      z-index: 2;
+      font-size: .58rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: rgba(201,169,110,.3);
+    }
+    .btn-submit:disabled { opacity: .5; }
+
+    /* Form feedback */
+    .form-feedback {
+      margin-top: 1.4rem;
+      font-size: .65rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      min-height: 1.2em;
+      transition: opacity .4s;
+    }
+    .form-feedback.success { color: var(--or); }
+    .form-feedback.error   { color: #c97070; }
+
+    /* ─── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: var(--noir-2);
+      padding: 2.8rem 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(201,169,110,.08);
+    }
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1.1rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,.3);
+      display: flex;
+      align-items: baseline;
+      gap: .5rem;
+    }
+    .footer-brand-sub {
+      font-size: .58rem;
+      letter-spacing: .15em;
+      font-weight: 300;
+      font-style: italic;
+      text-transform: none;
+      color: rgba(244,239,230,.18);
+    }
+    .footer-copy {
+      font-size: .58rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,.18);
+    }
+
+    /* ─── KEYFRAMES ───────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn  { to { opacity: 1; } }
+    @keyframes scaleBar {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50%       { opacity: .3; transform: scaleY(.4); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── SCROLL REVEAL ───────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity .95s var(--ease-lux), transform .95s var(--ease-lux);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .12s; }
+    .d2 { transition-delay: .24s; }
+    .d3 { transition-delay: .38s; }
+    .d4 { transition-delay: .52s; }
+
+    /* ─── LANG TRANSITION ─────────────────────────────── */
+    .lang-fade {
+      transition: opacity .28s ease;
+      opacity: 0;
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .about { grid-template-columns: 1fr; }
+      .about-left { height: 40vh; }
+      .about-right { padding: 4rem 2rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .g-item:first-child { grid-column: 1 / -1; aspect-ratio: 16/9; min-height: auto; }
+      .contact { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 2rem; }
+      nav { padding: 1.5rem 2rem; }
+      .nav-links { gap: 1.5rem; }
+    }
+    @media (max-width: 700px) {
+      .nav-right { gap: 1.5rem; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .hero-content { padding: 0 1.5rem 4rem; }
+      .hero-scroll { display: none; }
+      .gallery { padding: 5rem 1.5rem; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .g-item:first-child { grid-column: auto; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cur"></div>
+  <div id="cur-ring"></div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-brand">Amigurumis <span class="nav-brand-sub">Olivia Leyva</span></a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#about"  data-i18n="nav_creation">Creación</a></li>
+        <li><a href="#gallery" data-i18n="nav_gallery">Galería</a></li>
+        <li><a href="#contact" data-i18n="nav_contact">Contacto</a></li>
+      </ul>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="es">ES</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn" data-lang="fr">FR</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <video autoplay muted loop playsinline>
+      <source src="1.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-label" data-i18n="hero_label">Colección 2026 — Objeto de Arte</span>
+      <h1 class="hero-title" data-i18n="hero_title">El Arte de<br><em>Amigurumis</em></h1>
+      <p class="hero-sub" data-i18n="hero_sub">Una creación rara, nacida de un gesto artesanal paciente.<br>Objeto de deseo concebido para quienes<br>buscan la belleza en cada detalle.</p>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-bar"></div>
+      <span data-i18n="hero_scroll">Descubrir</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marquee-track" aria-hidden="true"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-left">
+      <div class="about-left-inner">
+        <div class="orb">
+          <div class="orb-ring"></div>
+          <div class="orb-ring"></div>
+          <div class="orb-ring"></div>
+          <span class="orb-center" data-i18n="orb_center">— artesanía —</span>
+        </div>
+      </div>
+      <span class="about-num">001</span>
+    </div>
+    <div class="about-right">
+      <span class="sec-label reveal" data-i18n="about_label">001 — Creación</span>
+      <h2 class="sec-heading reveal d1" data-i18n="about_heading">Un objeto concebido<br>para <em>la eternidad</em></h2>
+      <div class="hairline reveal d2"></div>
+      <p class="body-text reveal d2" data-i18n="about_p1">
+        Cada muñeca es una obra única, nacida de un gesto artesanal paciente. Los materiales nobles se pliegan a una visión radicalmente contemporánea para crear algo intemporal.
+      </p>
+      <p class="body-text reveal d3" data-i18n="about_p2">
+        En la encrucijada de la escultura y la alta costura, estas creaciones trascienden su propia definición — ni juguete, ni estatua, sino algo aún más raro.
+      </p>
+      <a href="#gallery" class="btn reveal d4" data-i18n="about_btn">Ver la colección</a>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery" id="gallery">
+    <div class="gallery-header">
+      <div>
+        <p class="sec-label reveal" data-i18n="gallery_label">002 — Galería</p>
+        <h2 class="gallery-title reveal d1" data-i18n="gallery_title">La <em>Colección</em></h2>
+      </div>
+      <span class="gallery-count reveal d1" data-i18n="gallery_count">8 Piezas</span>
+    </div>
+
+    <!-- Grid: Doll1–3 -->
+    <div class="gallery-grid">
+      <div class="g-item reveal">
+        <img src="photo/Doll1.jpeg" alt="La Silueta">
+        <div class="g-caption">
+          <span class="g-num">N° 001</span>
+          <span class="g-name" data-i18n="g1_name">La Silueta</span>
+        </div>
+      </div>
+      <div class="g-item reveal d1">
+        <img src="photo/Doll2.jpeg" alt="La Sombra">
+        <div class="g-caption">
+          <span class="g-num">N° 002</span>
+          <span class="g-name" data-i18n="g2_name">La Sombra</span>
+        </div>
+      </div>
+      <div class="g-item reveal d2">
+        <img src="photo/Doll3.jpeg" alt="El Retrato">
+        <div class="g-caption">
+          <span class="g-num">N° 003</span>
+          <span class="g-name" data-i18n="g3_name">El Retrato</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel: Doll4–8 -->
+    <div class="carousel-wrap reveal">
+      <div class="carousel-track" id="carousel-track">
+        <div class="c-item">
+          <img src="photo/Doll4.jpeg" alt="N° 004">
+          <div class="g-caption"><span class="g-num">N° 004</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll5.jpeg" alt="N° 005">
+          <div class="g-caption"><span class="g-num">N° 005</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll6.jpeg" alt="N° 006">
+          <div class="g-caption"><span class="g-num">N° 006</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll7.jpeg" alt="N° 007">
+          <div class="g-caption"><span class="g-num">N° 007</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll8.jpeg" alt="N° 008">
+          <div class="g-caption"><span class="g-num">N° 008</span></div>
+        </div>
+        <!-- Duplicate for seamless loop -->
+        <div class="c-item">
+          <img src="photo/Doll4.jpeg" alt="N° 004">
+          <div class="g-caption"><span class="g-num">N° 004</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll5.jpeg" alt="N° 005">
+          <div class="g-caption"><span class="g-num">N° 005</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll6.jpeg" alt="N° 006">
+          <div class="g-caption"><span class="g-num">N° 006</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll7.jpeg" alt="N° 007">
+          <div class="g-caption"><span class="g-num">N° 007</span></div>
+        </div>
+        <div class="c-item">
+          <img src="photo/Doll8.jpeg" alt="N° 008">
+          <div class="g-caption"><span class="g-num">N° 008</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTE -->
+  <section class="manifeste">
+    <blockquote class="reveal" data-i18n="quote">
+      « La belleza no está en el objeto, sino en la mirada que se le dirige. »
+    </blockquote>
+    <cite class="reveal d1" data-i18n="quote_cite">— Filosofía de la casa</cite>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div>
+      <span class="sec-label reveal" data-i18n="contact_label">003 — Contacto</span>
+      <h2 class="sec-heading reveal d1" data-i18n="contact_heading">Encontrarnos</h2>
+      <p class="body-text reveal d2" data-i18n="contact_body">Para cualquier solicitud de adquisición, colaboración o información sobre nuestras creaciones.</p>
+      <div class="contact-info reveal d3">
+        <div class="c-row">
+          <span class="c-label" data-i18n="c_email">Email</span>
+          <span class="c-val">williamsmk@live.fr</span>
+        </div>
+        <div class="c-row">
+          <span class="c-label" data-i18n="c_studio">Estudio</span>
+          <span class="c-val">Ciudad de México, México</span>
+        </div>
+      </div>
+      <a href="mailto:williamsmk@live.fr" class="btn-contact reveal d4" data-i18n="contact_btn">Contáctame</a>
+    </div>
+    <div class="artist-photo reveal d1">
+      <div class="artist-photo-inner has-photo" id="artist-photo-placeholder">
+        <img src="photo/IMG_mama.jpeg" alt="L'Artiste">
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-brand">Amigurumis <span class="footer-brand-sub">Olivia Leyva</span></span>
+    <span class="footer-copy" data-i18n="footer_copy">© 2026 — Todos los derechos reservados</span>
+  </footer>
+
+  <script>
+  /* ══════════════════════════════════════════════
+     TRANSLATIONS
+  ══════════════════════════════════════════════ */
+  const T = {
+    es: {
+      nav_creation: 'Creación',
+      nav_gallery:  'Galería',
+      nav_contact:  'Contacto',
+      hero_label:   'Colección 2026 — Objeto de Arte',
+      hero_title:   'El Arte de<br><em>Amigurumis</em>',
+      hero_sub:     'Una creación rara, nacida de un gesto artesanal paciente.<br>Objeto de deseo concebido para quienes<br>buscan la belleza en cada detalle.',
+      hero_scroll:  'Descubrir',
+      orb_center:   '— artesanía —',
+      marquee:      ['Amigurumis','Objeto de Arte','Colección','Artesanía','Saber Hacer'],
+      about_label:   '001 — Creación',
+      about_heading: 'Un objeto concebido<br>para <em>la eternidad</em>',
+      about_p1:      'Cada muñeca es una obra única, nacida de un gesto artesanal paciente. Los materiales nobles se pliegan a una visión radicalmente contemporánea para crear algo intemporal.',
+      about_p2:      'En la encrucijada de la escultura y la alta costura, estas creaciones trascienden su propia definición — ni juguete, ni estatua, sino algo aún más raro.',
+      about_btn:     'Ver la colección',
+      gallery_label: '002 — Galería',
+      gallery_title: 'La <em>Colección</em>',
+      gallery_count: '3 Piezas',
+      g1_name:       'La Silueta',
+      g2_name:       'La Sombra',
+      g3_name:       'El Retrato',
+      quote:         '« La belleza no está en el objeto, sino en la mirada que se le dirige. »',
+      quote_cite:    '— Filosofía de la casa',
+      contact_label:   '003 — Contacto',
+      contact_heading: 'Encontrarnos',
+      contact_body:    'Para cualquier solicitud de adquisición, colaboración o información sobre nuestras creaciones.',
+      c_email:         'Email',
+      c_studio:        'Estudio',
+      form_name:       'Nombre',
+      form_name_ph:    'Su nombre',
+      form_email:      'Email',
+      form_email_ph:   'su@email.com',
+      form_msg:        'Mensaje',
+      form_msg_ph:     'Su mensaje…',
+      form_send:       'Enviar',
+      contact_btn:     'Contáctame',
+      artist_label:    'La Artista',
+      footer_copy:     '© 2026 — Todos los derechos reservados',
+    },
+    en: {
+      nav_creation: 'Creation',
+      nav_gallery:  'Gallery',
+      nav_contact:  'Contact',
+      hero_label:   'Collection 2026 — Art Object',
+      hero_title:   'The Art of<br><em>Amigurumis</em>',
+      hero_sub:     'A rare creation, born from a patient artisan\'s gesture.<br>An object of desire conceived for those who<br>seek beauty in every detail.',
+      hero_scroll:  'Discover',
+      orb_center:   '— craftsmanship —',
+      marquee:      ['Amigurumis','Art Object','Collection','Craftsmanship','Expertise'],
+      about_label:   '001 — Creation',
+      about_heading: 'An object crafted<br>for <em>eternity</em>',
+      about_p1:      'Each doll is a unique work, born from a patient artisan\'s gesture. Noble materials bend to a radically contemporary vision to create something timeless.',
+      about_p2:      'At the crossroads of sculpture and haute couture, these creations transcend their own definition — neither toy, nor statue, but something even rarer.',
+      about_btn:     'View the collection',
+      gallery_label: '002 — Gallery',
+      gallery_title: 'The <em>Collection</em>',
+      gallery_count: '8 Pieces',
+      g1_name:       'The Silhouette',
+      g2_name:       'The Shadow',
+      g3_name:       'The Portrait',
+      quote:         '« Beauty lies not in the object, but in the gaze directed toward it. »',
+      quote_cite:    '— House philosophy',
+      contact_label:   '003 — Contact',
+      contact_heading: 'Find<br><em>us</em>',
+      contact_body:    'For any acquisition request, collaboration, or information about our creations.',
+      c_email:         'Email',
+      c_studio:        'Studio',
+      form_name:       'Name',
+      form_name_ph:    'Your name',
+      form_email:      'Email',
+      form_email_ph:   'your@email.com',
+      form_msg:        'Message',
+      form_msg_ph:     'Your message…',
+      form_send:       'Send',
+      contact_btn:     'Contact me',
+      artist_label:    'The Artist',
+      footer_copy:     '© 2026 — All rights reserved',
+    },
+    fr: {
+      nav_creation: 'Création',
+      nav_gallery:  'Galerie',
+      nav_contact:  'Contact',
+      hero_label:   'Collection 2026 — Objet d\'Art',
+      hero_title:   'L\'Art<br>d\'<em>Amigurumis</em>',
+      hero_sub:     'Une création rare, née d\'un geste artisanal patient.<br>Objet de désir conçu pour celles et ceux<br>qui cherchent la beauté dans chaque détail.',
+      hero_scroll:  'Découvrir',
+      orb_center:   '— savoir-faire —',
+      marquee:      ['Amigurumis','Objet d\'Art','Collection','Artisanat','Savoir-Faire'],
+      about_label:   '001 — Création',
+      about_heading: 'Un objet conçu<br>pour <em>l\'éternité</em>',
+      about_p1:      'Chaque poupée est une œuvre unique, née d\'un geste artisanal patient. Les matières nobles se plient à une vision radicalement contemporaine pour créer quelque chose d\'intemporel.',
+      about_p2:      'À la croisée de la sculpture et de la haute couture, ces créations transcendent leur propre définition — ni jouet, ni statue, mais quelque chose de plus rare encore.',
+      about_btn:     'Voir la collection',
+      gallery_label: '002 — Galerie',
+      gallery_title: 'La <em>Collection</em>',
+      gallery_count: '8 Pièces',
+      g1_name:       'La Silhouette',
+      g2_name:       'L\'Ombre',
+      g3_name:       'Le Portrait',
+      quote:         '« La beauté n\'est pas dans l\'objet, mais dans le regard qu\'on lui porte. »',
+      quote_cite:    '— Philosophie de la maison',
+      contact_label:   '003 — Contact',
+      contact_heading: 'Nous<br><em>retrouver</em>',
+      contact_body:    'Pour toute demande d\'acquisition, de collaboration ou d\'information sur nos créations.',
+      c_email:         'Email',
+      c_studio:        'Atelier',
+      form_name:       'Nom',
+      form_name_ph:    'Votre nom',
+      form_email:      'Email',
+      form_email_ph:   'votre@email.com',
+      form_msg:        'Message',
+      form_msg_ph:     'Votre message…',
+      form_send:       'Envoyer',
+      contact_btn:     'Me contacter',
+      artist_label:    'L\'Artiste',
+      footer_copy:     '© 2026 — Tous droits réservés',
+    }
+  };
+
+  /* ══════════════════════════════════════════════
+     MARQUEE BUILDER
+  ══════════════════════════════════════════════ */
+  function buildMarquee(lang) {
+    const items = T[lang].marquee;
+    const track = document.getElementById('marquee-track');
+    // double for seamless loop
+    let html = '';
+    for (let r = 0; r < 2; r++) {
+      items.forEach(word => {
+        html += `<span class="m-item">${word}</span><span class="m-item accent">◆</span>`;
+      });
+    }
+    track.innerHTML = html;
+  }
+
+  /* ══════════════════════════════════════════════
+     APPLY LANGUAGE
+  ══════════════════════════════════════════════ */
+  function applyLang(lang) {
+    const dict = T[lang];
+
+    // Fade out translatable elements
+    document.querySelectorAll('[data-i18n], [data-i18n-placeholder]').forEach(el => {
+      el.style.transition = 'opacity .2s ease';
+      el.style.opacity = '0';
+    });
+
+    setTimeout(() => {
+      // Update text content
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (dict[key] !== undefined) el.innerHTML = dict[key];
+      });
+
+      // Update placeholders
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        if (dict[key] !== undefined) el.placeholder = dict[key];
+      });
+
+      // Update marquee
+      buildMarquee(lang);
+
+      // Update html lang attribute
+      document.documentElement.lang = lang;
+
+      // Fade back in
+      document.querySelectorAll('[data-i18n], [data-i18n-placeholder]').forEach(el => {
+        el.style.opacity = '1';
+      });
+
+      // Update active button state
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+    }, 220);
+  }
+
+  /* ══════════════════════════════════════════════
+     INIT
+  ══════════════════════════════════════════════ */
+  buildMarquee('es');
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+
+  /* ══════════════════════════════════════════════
+     CURSOR
+  ══════════════════════════════════════════════ */
+  const cur  = document.getElementById('cur');
+  const ring = document.getElementById('cur-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx + 'px';
+    cur.style.top  = my + 'px';
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * .11;
+    ry += (my - ry) * .11;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a, button, .g-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cur.style.width  = '4px';
+      cur.style.height = '4px';
+      ring.style.width  = '58px';
+      ring.style.height = '58px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cur.style.width  = '7px';
+      cur.style.height = '7px';
+      ring.style.width  = '34px';
+      ring.style.height = '34px';
+    });
+  });
+
+  /* ══════════════════════════════════════════════
+     NAV SCROLL
+  ══════════════════════════════════════════════ */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ══════════════════════════════════════════════
+     SCROLL REVEAL
+  ══════════════════════════════════════════════ */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: .12, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  /* ══════════════════════════════════════════════
+     CAROUSEL — auto-scroll, pause on hover
+  ══════════════════════════════════════════════ */
+  const track   = document.getElementById('carousel-track');
+  let offset    = 0;
+  let paused    = false;
+  const speed   = 0.6; // px per frame
+  const halfW   = () => track.scrollWidth / 2;
+
+  function tickCarousel() {
+    if (!paused) {
+      offset += speed;
+      if (offset >= halfW()) offset = 0;
+      track.style.transform = `translateX(-${offset}px)`;
+    }
+    requestAnimationFrame(tickCarousel);
+  }
+  tickCarousel();
+
+  track.addEventListener('mouseenter', () => paused = true);
+  track.addEventListener('mouseleave', () => paused = false);
+
+  /* ══════════════════════════════════════════════
+     CONTACT FORM — EmailJS
+  ══════════════════════════════════════════════ */
+  const feedbackMsgs = {
+    es: { sending: 'Enviando…', success: 'Mensaje enviado — gracias.', error: 'Error al enviar. Por favor inténtalo de nuevo.' },
+    en: { sending: 'Sending…',  success: 'Message sent — thank you.',  error: 'Failed to send. Please try again.' },
+    fr: { sending: 'Envoi…',    success: 'Message envoyé — merci.',     error: 'Échec de l\'envoi. Veuillez réessayer.' },
+  };
+
+  document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const lang     = document.documentElement.lang || 'es';
+    const msgs     = feedbackMsgs[lang] || feedbackMsgs.es;
+    const btn      = this.querySelector('.btn-submit');
+    const feedback = document.getElementById('form-feedback');
+
+    btn.disabled    = true;
+    btn.textContent = msgs.sending;
+    feedback.textContent = '';
+    feedback.className   = 'form-feedback';
+
+    try {
+      const formData = new FormData(this);
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        from_name: formData.get('from_name'),
+        reply_to:  formData.get('reply_to'),
+        message:   formData.get('message'),
+      }, { publicKey: EMAILJS_PUBLIC_KEY });
+      feedback.textContent = msgs.success;
+      feedback.className   = 'form-feedback success';
+      this.reset();
+    } catch (err) {
+      console.error('EmailJS error:', err.text || err);
+      feedback.textContent = msgs.error + (err.text ? ` (${err.text})` : '');
+      feedback.className   = 'form-feedback error';
+    } finally {
+      btn.disabled = false;
+      const currentLang = document.documentElement.lang || 'es';
+      btn.textContent = T[currentLang]?.form_send || 'Enviar';
+    }
+  });
+  </script>
+</body>
+</html>
